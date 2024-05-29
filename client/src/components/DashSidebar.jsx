@@ -1,4 +1,4 @@
-import {Sidebar} from 'flowbite-react';
+import {Sidebar, TextInput} from 'flowbite-react';
 import {HiArrowSmRight, HiUser} from 'react-icons/hi';
 import { useEffect, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
