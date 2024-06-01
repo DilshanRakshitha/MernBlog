@@ -13,7 +13,7 @@ export default function Header() {
   return (
     <Navbar className = 'border-b-2'>
       <Link to='/' className='whitespace-nowrap self-center text-sm sm:text-xl font-semibold dark:text-white'>
-        <span className='px-2 py-1 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-lg text-white'> D </span>
+        <span className='px-1 py-1 bg-gradient-to-r from-sky-500 to-emerald-500s text-white'> D - </span>
         log
       </Link>
       <form >
@@ -73,11 +73,6 @@ export default function Header() {
           <Navbar.Link active={path == '/about'} as={'div'}>
             <Link to='/about'>
               About
-            </Link>
-          </Navbar.Link>
-          <Navbar.Link active={path == '/projects'} as={'div'}>
-            <Link to='/projects'>
-              Projects
             </Link>
           </Navbar.Link>
       </Navbar.Collapse>

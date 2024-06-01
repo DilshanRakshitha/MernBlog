@@ -103,9 +103,9 @@ export default function CreatePost() {
             }
           >
             <option value='uncategorized'>Select a category</option>
-            <option value='javascript'>JavaScript</option>
-            <option value='reactjs'>React.js</option>
-            <option value='nextjs'>Next.js</option>
+            <option value='Machine Learning'>Machine Learning</option>
+            <option value='Deep Learning'>Deep Learning</option>
+            <option value='Cyber Security'>Cyber Security</option>
           </Select>
         </div>
         <div className='flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3'>
@@ -142,6 +142,9 @@ export default function CreatePost() {
             className='w-full h-72 object-cover'
           />
         )}
+        <Button className='w-full h-10 bg-gradient-to-r from-purple-700 ' color='gray' pill>
+          Click to start AI voice writing ... 
+          </Button>
         <ReactQuill
           theme='snow'
           placeholder='Write something...'

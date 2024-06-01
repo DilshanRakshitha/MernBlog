@@ -13,6 +13,14 @@ export default function PostPage() {
   const [post, setPost] = useState(null);
   const [recentPosts, setRecentPosts] = useState(null);
 
+  const readText = () => {
+    // console.log(post)
+    const utteranceTitle = new SpeechSynthesisUtterance(post.title);
+    speechSynthesis.speak(utteranceTitle);
+    const utterance = new SpeechSynthesisUtterance(post.content);
+    speechSynthesis.speak(utterance);
+   }
+ 
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -58,10 +66,11 @@ export default function PostPage() {
         <Spinner size='xl' />
       </div>
     );
+    // console.log(post)
   return (
     <main className='p-3 flex flex-col max-w-6xl mx-auto min-h-screen'>
-      <Button className='w-12 h-10' color='gray' pill>
-        {<FaMicrophone/>}
+      <Button className='w-full h-10 bg-gradient-to-r from-purple-700 ' color='gray' pill onClick={readText}>
+        Read Aloud 
       </Button>
       <h1 className='text-3xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl'>
         {post && post.title}

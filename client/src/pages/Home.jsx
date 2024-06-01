@@ -17,10 +17,14 @@ export default function Home() {
   return (
     <div>
       <div className='flex flex-col gap-6 p-28 px-3 max-w-6xl mx-auto '>
-        <h1 className='text-3xl font-bold lg:text-6xl'>Welcome to my Blog</h1>
-        <p className='text-gray-500 text-xs sm:text-sm'>
-          Here you'll find a variety of articles and tutorials on topics such as
-          software engineering, machine learning, data science.
+        <h1 className='text-3xl font-bold lg:text-6xl'>Welcome to D-log</h1>
+        <h2 classname='text-xl font-bold lg:text-3xl'>Your personal blog...</h2>
+        <p className='text-gray-500 text-xs sm:text-sm flex'>
+        Prepare to be dazzled! We delves into the nexus of AI, 
+        machine learning, data science, and the magic of software engineering. 
+        We'll crack the code of intelligent machines, harness the power of data,
+         and unveil the alchemy of world-changing software. Join our quest to illuminate
+          the future of technology, one brilliant post at a time.
         </p>
         <Link
           to='/search'
@@ -33,24 +37,18 @@ export default function Home() {
         <CallToAction />
       </div> */}
 
-      {/* <div className='max-w-6xl mx-auto p-3 flex flex-col gap-8 py-7'>
+      <div className='max-w-6xl mx-auto p-3 flex flex-col gap-8 py-7'>
         {posts && posts.length > 0 && (
           <div className='flex flex-col gap-6'>
-            <h2 className='text-2xl font-semibold text-center'>Recent Posts</h2>
+            <h2 className='text-2xl font-semibold text-left'>Recent Posts</h2>
             <div className='flex flex-wrap gap-4'>
               {posts.map((post) => (
                 <PostCard key={post._id} post={post} />
               ))}
             </div>
-            <Link
-              to={'/search'}
-              className='text-lg text-teal-500 hover:underline text-center'
-            >
-              View all posts
-            </Link>
           </div>
         )}
-      </div> */}
+      </div>
     </div>
   );
 }

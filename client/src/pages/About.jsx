@@ -4,11 +4,11 @@ export default function About() {
       <div className='max-w-2xl mx-auto p-3 text-center'>
         <div>
           <h1 className='text-3xl font font-semibold text-center my-7'>
-            About Dilshans' Blog
+            About D-log
           </h1>
           <div className='text-md text-gray-500 flex flex-col gap-6'>
             <p>
-              Dilshans' Blog is a platform for the tech community to share 
+              Di-log is a platform for the tech community to share 
               their ideas. By contributing ot the groth of the technology field,
               specially machine learning, data science and Artificial Intelligence,
               we are proud to be pioneers in tech growth in the globe.
