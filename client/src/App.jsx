@@ -27,14 +27,13 @@ export default function App() {
         <Route path='/sign-up' element={<SignUp />} />
         <Route path='/search' element={<Search />} />
         <Route path='/create-post' element={<CreatePost />} />
+        
         <Route element={<PrivateRoute />}>
           <Route path='/dashBoard' element={<Dashboard />} />
         </Route>
-        <Route element={<OnlyAdminPrivateRoute />}>
-          <Route path='/update-post/:postId' element={<UpdatePost />} />
-        </Route>
+        {/* <Route element={<OnlyAdminPrivateRoute />}>
 
-        <Route path='/projects' element={<Projects />} />
+        </Route> */}
         <Route path='/post/:postSlug' element={<PostPage />} />
       </Routes>
       <Footer />
