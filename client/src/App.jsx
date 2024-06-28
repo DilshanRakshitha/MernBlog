@@ -32,7 +32,7 @@ export default function App() {
           <Route path='/dashBoard' element={<Dashboard />} />
         </Route>
         {/* <Route element={<OnlyAdminPrivateRoute />}>
-
+          
         </Route> */}
         <Route path='/post/:postSlug' element={<PostPage />} />
       </Routes>
