@@ -1,5 +1,5 @@
 import { Button, Spinner } from 'flowbite-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react'; // Import useRef
 import { Link, useParams } from 'react-router-dom';
 import CallToAction from '../components/CallToAction';
 import CommentSection from '../components/CommentSection';
@@ -12,15 +12,30 @@ export default function PostPage() {
   const [error, setError] = useState(false);
   const [post, setPost] = useState(null);
   const [recentPosts, setRecentPosts] = useState(null);
+  const [isSpeaking, setIsSpeaking] = useState(false); // State to manage speaking status
+  const utteranceRef = useRef(null); // Ref to hold the current utterance
 
   const readText = () => {
-    // console.log(post)
-    const utteranceTitle = new SpeechSynthesisUtterance(post.title);
-    speechSynthesis.speak(utteranceTitle);
-    const utterance = new SpeechSynthesisUtterance(post.content);
-    speechSynthesis.speak(utterance);
-   }
- 
+    if (!isSpeaking) {
+      // Start speaking
+      const utteranceTitle = new SpeechSynthesisUtterance(post.title);
+      const utteranceContent = new SpeechSynthesisUtterance(post.content);
+      speechSynthesis.speak(utteranceTitle);
+      speechSynthesis.speak(utteranceContent);
+      setIsSpeaking(true);
+      utteranceRef.current = { utteranceTitle, utteranceContent };
+    } else {
+      // Stop speaking
+      if (utteranceRef.current) {
+        utteranceRef.current.utteranceTitle.onend = null;
+        utteranceRef.current.utteranceContent.onend = null;
+        speechSynthesis.cancel();
+        setIsSpeaking(false);
+        utteranceRef.current = null;
+      }
+    }
+  };
+
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -66,11 +81,11 @@ export default function PostPage() {
         <Spinner size='xl' />
       </div>
     );
-    // console.log(post)
+
   return (
     <main className='p-3 flex flex-col max-w-6xl mx-auto min-h-screen'>
       <Button className='w-full h-10 bg-gradient-to-r from-purple-700 ' color='gray' pill onClick={readText}>
-        Read Aloud 
+        {isSpeaking ? "Stop Reading" : "Read Aloud"}
       </Button>
       <h1 className='text-3xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl'>
         {post && post.title}
@@ -98,10 +113,7 @@ export default function PostPage() {
         className='p-3 max-w-2xl mx-auto w-full post-content'
         dangerouslySetInnerHTML={{ __html: post && post.content }}
       ></div>
-      {/* <div className='max-w-4xl mx-auto w-full'>
-        <CallToAction />
-      </div> */}
-      <CommentSection postId={post._id} />
+      <CommentSection postId={post && post._id} />
 
       <div className='flex flex-col justify-center items-center mb-5'>
         <h1 className='text-xl mt-5'>Recent articles</h1>

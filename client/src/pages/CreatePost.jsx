@@ -1,4 +1,5 @@
 import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
+import React, { useState, useRef, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {
@@ -8,7 +9,6 @@ import {
   uploadBytesResumable,
 } from 'firebase/storage';
 import { app } from '../firebase';
-import { useState } from 'react';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { useNavigate } from 'react-router-dom';
@@ -17,12 +17,70 @@ export default function CreatePost() {
   const [file, setFile] = useState(null);
   const [imageUploadProgress, setImageUploadProgress] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({ content: '' });
   const [publishError, setPublishError] = useState(null);
-
+  const [listening, setListening] = useState(false);
+  const recognitionRef = useRef(null);
   const navigate = useNavigate();
+  const contentRef = useRef(''); // Ref to store the current content
 
-  const handleUpdloadImage = async () => {
+  useEffect(() => {
+    initializeSpeechRecognition();
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, []);
+
+  const initializeSpeechRecognition = () => {
+    const recognition = new window.webkitSpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
+    recognition.onstart = () => {
+      setListening(true);
+    };
+
+    recognition.onresult = (event) => {
+      let interimTranscript = '';
+      let finalTranscript = contentRef.current;
+
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript + ' ';
+        } else {
+          interimTranscript += event.results[i][0].transcript;
+        }
+      }
+
+      // Update the content ref with final transcript and append interim transcript
+      contentRef.current = finalTranscript;
+      setFormData((prevData) => ({
+        ...prevData,
+        content: finalTranscript + interimTranscript,
+      }));
+    };
+
+    recognition.onend = () => {
+      setListening(false);
+      // Start from a new line after a break
+      contentRef.current += '\n';
+    };
+
+    recognitionRef.current = recognition;
+  };
+
+  const toggleSpeechRecognition = () => {
+    if (!listening) {
+      recognitionRef.current.start();
+    } else {
+      recognitionRef.current.stop();
+    }
+    setListening((prevListening) => !prevListening);
+  };
+
+  const handleUploadImage = async () => {
     try {
       if (!file) {
         setImageUploadError('Please select an image');
@@ -58,6 +116,7 @@ export default function CreatePost() {
       console.log(error);
     }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -82,6 +141,7 @@ export default function CreatePost() {
       setPublishError('Something went wrong');
     }
   };
+
   return (
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>
       <h1 className='text-center text-3xl my-7 font-semibold'>Create a post</h1>
@@ -119,7 +179,7 @@ export default function CreatePost() {
             gradientDuoTone='purpleToBlue'
             size='sm'
             outline
-            onClick={handleUpdloadImage}
+            onClick={handleUploadImage}
             disabled={imageUploadProgress}
           >
             {imageUploadProgress ? (
@@ -142,14 +202,20 @@ export default function CreatePost() {
             className='w-full h-72 object-cover'
           />
         )}
-        <Button className='w-full h-10 bg-gradient-to-r from-purple-700 ' color='gray' pill>
-          Click to start AI voice writing ... 
-          </Button>
+        <Button
+          className='w-full h-10 bg-gradient-to-r from-purple-700 '
+          color='gray'
+          pill
+          onClick={toggleSpeechRecognition}
+        >
+          {listening ? 'Stop Voice Input' : 'Click to start AI voice writing'}
+        </Button>
         <ReactQuill
           theme='snow'
           placeholder='Write something...'
           className='h-72 mb-12'
           required
+          value={formData.content}
           onChange={(value) => {
             setFormData({ ...formData, content: value });
           }}
